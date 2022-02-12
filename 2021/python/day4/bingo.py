@@ -5,21 +5,29 @@ def initialize_empty_boards(boards):
     return np.zeros_like(boards)
 
 
-def play_bingo(numbers, boards):
+def play_bingo(numbers, boards, part):
     empty_boards = initialize_empty_boards(boards)
+    print(boards.shape, empty_boards.shape)
+    winners = list()
     for num in numbers:
         positions = check_num_in_board(num, boards)
         if positions == set():
             continue
         for i, j, k in positions:
             empty_boards[i][j][k] = 1
-            winners = check_winner(empty_boards)
-            if winners != set():
-                winners = list(winners)
+            new_winners = check_winner(empty_boards, winners)
+            winners = winners + new_winners
+            if winners != list() and part == 1:
                 sum = calculate_unmarked_numbers(
                     boards[winners[0]], empty_boards[winners[0]]
                 )
                 return winners, sum, num
+            if len(winners) == len(boards) and part == 2:
+                sum = calculate_unmarked_numbers(
+                    boards[winners[-1]], empty_boards[winners[-1]]
+                )
+                return winners, sum, num
+    print("here")
 
 
 def calculate_unmarked_numbers(board, marker_board):
@@ -31,19 +39,22 @@ def calculate_unmarked_numbers(board, marker_board):
     return sum
 
 
-def check_winner(boards):
-    winners = set()
-    # Check for horizontal winners
+def check_winner(boards, already_won):
+    winners = list()
     for i, board in enumerate(boards):
+        if i in already_won or i in winners:
+            continue
         for j, row in enumerate(board):
             if np.count_nonzero(row) == len(row):
-                winners.add(i)
+                winners.append(i)
     # Check for vertical winners
     for i, board in enumerate(boards):
+        if i in already_won or i in winners:
+            continue
         temp = np.transpose(board)
         for j, row in enumerate(temp):
             if np.count_nonzero(row) == len(row):
-                winners.add(i)
+                winners.append(i)
     return winners
 
 
@@ -83,9 +94,17 @@ def get_input(filename):
 def part_1():
     filename = "input.txt"
     numbers, boards = get_input(filename)
-    winner, sum, num = play_bingo(numbers, boards)
+    winner, sum, num = play_bingo(numbers, boards, 1)
     print(winner, sum, num)
     print(f"solution is: {sum * num}")
 
 
-part_1()
+def part_2():
+    filename = "input.txt"
+    numbers, boards = get_input(filename)
+    winner, sum, num = play_bingo(numbers, boards, 2)
+    print(winner, sum, num)
+    print(f"solution is: {sum * num}")
+
+
+part_2()
