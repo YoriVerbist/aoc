@@ -10,7 +10,6 @@ def get_board(filename):
         lines = [line.strip("\n").split(" -> ") for line in f.readlines()]
         max = find_min_max(lines) + 1
         empty_board = initialize_empty_board(max)
-        print(empty_board.shape)
         for line in lines:
             x1, y1 = map(int, line[0].split(","))
             x2, y2 = map(int, line[1].split(","))
@@ -32,7 +31,12 @@ def get_board(filename):
                         else:
                             empty_board[i][x1] = 1
             else:
-                pass
+                print(y1, y2, x1, x2)
+                for i in range((x2 - x1 + 1)):
+                    if empty_board[y1 + i][x1 + i] != 0:
+                        empty_board[y1 + i][x1 + i] += 1
+                    else:
+                        empty_board[y1 + i][x1 + i] = 1
         return empty_board
 
 
@@ -48,8 +52,9 @@ def calculate_multiple(board):
 
 
 def part_1():
-    filename = "input.txt"
+    filename = "test.txt"
     board = get_board(filename)
+    print(board)
     sol = calculate_multiple(board)
     print(sol)
 
