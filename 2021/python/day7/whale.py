@@ -1,4 +1,5 @@
 import math
+import random
 
 
 def part_1():
@@ -21,8 +22,10 @@ def find_cheapest_position(positions, counting_type):
     min_pos = min(positions)
     max_pos = max(positions)
     current_pos = sum(positions) // len(positions)
+    print("current_pos:", current_pos)
     possible_possitions = {i: math.inf for i in range(min_pos, max_pos + 1)}
     while True:
+        print("current_pos:", current_pos)
         total = 0
         if counting_type == "normal":
             for value in positions:
