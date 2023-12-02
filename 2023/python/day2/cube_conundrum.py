@@ -12,6 +12,14 @@ def part_1(colors: dict) -> int:
         sum += int(key)
     return sum
 
+def part_2(colors: dict) -> int:
+    sum = 0
+    for key in colors.keys():
+        red_max = max(colors[key]["red"])
+        green_max = max(colors[key]["green"])
+        blue_max = max(colors[key]["blue"])
+        sum += red_max * green_max * blue_max
+    return sum
 
 if __name__ == "__main__":
     with open("puzzle.txt") as file:
@@ -29,5 +37,5 @@ if __name__ == "__main__":
                     colors[game_id]["red"].append(int(number))
                 if "green" in col:
                     colors[game_id]["green"].append(int(number))
-        print(colors)
     print("Part 1:", part_1(colors))
+    print("Part 2:", part_2(colors))
